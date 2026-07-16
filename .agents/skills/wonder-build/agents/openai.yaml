@@ -1,0 +1,4 @@
+interface:
+  display_name: "WonderBuild"
+  short_description: "Construct clear knowledge artifacts"
+  default_prompt: "Use $wonder-build to help with this task."

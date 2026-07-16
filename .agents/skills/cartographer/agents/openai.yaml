@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cartographer"
+  short_description: "Audit documentation against current reality"
+  default_prompt: "Use $cartographer to verify this documentation map against current sources."

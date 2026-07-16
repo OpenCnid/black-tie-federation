@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hypershot Protocol"
+  short_description: "Build compact instruction-bearing hypershots"
+  default_prompt: "Use $hypershot-protocol to help with this task."

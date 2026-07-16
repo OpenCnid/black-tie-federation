@@ -1,0 +1,4 @@
+interface:
+  display_name: "Portraits"
+  short_description: "Create canonical public Lexideck portraits"
+  default_prompt: "Use $portraits to create a canonical professional portrait of a Lexideck agent."

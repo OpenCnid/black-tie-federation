@@ -1,0 +1,4 @@
+interface:
+  display_name: "WonderScholar"
+  short_description: "Design bounded research frameworks"
+  default_prompt: "Use $wonder-scholar to design a rigorous, bounded research framework and executable query architecture."

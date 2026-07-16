@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lexideck Deep Research"
+  short_description: "Run bounded WonderScholar research chains"
+  default_prompt: "Use $deep-research to frame a bounded WonderScholar inquiry, run its evidence lines, and synthesize a cited report."

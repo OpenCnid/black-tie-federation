@@ -1,0 +1,4 @@
+interface:
+  display_name: "PTG Synthesis"
+  short_description: "Synthesize persona tensors from sparse inputs"
+  default_prompt: "Use $ptg-synthesis to create a first-draft custom-agent persona from these inputs."

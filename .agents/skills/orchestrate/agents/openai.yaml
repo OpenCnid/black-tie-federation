@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrate"
+  short_description: "Route work across Lexideck specialists"
+  default_prompt: "Use $orchestrate to help with this task."

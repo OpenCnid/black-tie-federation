@@ -1,0 +1,4 @@
+interface:
+  display_name: "WonderStudio"
+  short_description: "Direct polished visual generation"
+  default_prompt: "Use $wonder-studio to help with this task."

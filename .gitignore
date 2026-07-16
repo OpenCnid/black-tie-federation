@@ -1,0 +1,48 @@
+# Local user context and future private overlays
+.lexideck-local/
+.agents/skills/local-*/
+
+# Canonical private-skill namespace; basename match applies at any depth
+private-*
+
+# Private Lexideck registers, excluded if copied here accidentally
+wiki/
+asmr/
+suno/
+_design_docs/
+.agents/skills/tactor/
+
+# Generated and working artifacts
+production_artifacts/
+Research/Deep_Research_Outputs/
+*.log
+*.tmp
+.pytest_cache/
+__pycache__/
+.codex-log/
+
+# Ignore image content by default
+images/*
+
+# Keep the curated canonical-agent directory
+!images/agents/
+images/agents/*
+!images/agents/lexi-black-tie.png
+!images/agents/dexter-black-tie.png
+!images/agents/gus-black-tie.png
+!images/agents/anna-black-tie.png
+!images/agents/titus-black-tie.png
+!images/agents/maisie-black-tie.png
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Common operating-system and editor state
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

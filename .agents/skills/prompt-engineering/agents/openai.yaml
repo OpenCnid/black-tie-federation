@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prompt Engineering"
+  short_description: "Design and refine reliable prompts"
+  default_prompt: "Use $prompt-engineering to turn this objective into a precise reusable prompt."

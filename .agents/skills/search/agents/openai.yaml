@@ -1,0 +1,4 @@
+interface:
+  display_name: "Search"
+  short_description: "Ground answers in current reliable sources"
+  default_prompt: "Use $search to help with this task."

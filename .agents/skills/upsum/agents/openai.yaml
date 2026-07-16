@@ -1,0 +1,4 @@
+interface:
+  display_name: "UPSUM"
+  short_description: "Produce high-fidelity system status summaries"
+  default_prompt: "Use $upsum to help with this task."

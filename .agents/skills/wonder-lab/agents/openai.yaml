@@ -1,0 +1,4 @@
+interface:
+  display_name: "WonderLab"
+  short_description: "Craft narrative and therapeutic stories"
+  default_prompt: "Use $wonder-lab to help with this task."

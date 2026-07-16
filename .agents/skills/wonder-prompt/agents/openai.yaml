@@ -1,0 +1,4 @@
+interface:
+  display_name: "WonderPrompt"
+  short_description: "Engineer deployable instruction systems"
+  default_prompt: "Use $wonder-prompt to help with this task."

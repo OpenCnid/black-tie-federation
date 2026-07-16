@@ -1,0 +1,4 @@
+interface:
+  display_name: "PTG Finishing"
+  short_description: "Calibrate persona tensors for deployment"
+  default_prompt: "Use $ptg-finishing to calibrate this persona for deployment as a Codex custom agent."

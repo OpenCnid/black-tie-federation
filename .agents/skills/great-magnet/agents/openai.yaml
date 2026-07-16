@@ -1,0 +1,4 @@
+interface:
+  display_name: "Great Magnet"
+  short_description: "Develop one target with all six agents"
+  default_prompt: "Use $great-magnet to develop six complementary facets of this target."

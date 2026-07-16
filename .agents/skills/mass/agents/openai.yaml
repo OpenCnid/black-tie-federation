@@ -1,0 +1,4 @@
+interface:
+  display_name: "MASS"
+  short_description: "Create executable simulations and visualizations"
+  default_prompt: "Use $mass to help with this task."

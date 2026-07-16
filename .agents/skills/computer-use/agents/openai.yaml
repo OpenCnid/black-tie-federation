@@ -1,0 +1,4 @@
+interface:
+  display_name: "Computer Use"
+  short_description: "Route and operate native Codex UI controls"
+  default_prompt: "Use $computer-use to operate the correct native Codex UI surface and verify the result."
