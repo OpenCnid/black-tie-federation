@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "density-chain-system-mode",
+  "updated": "2026-07-22",
+  "repo": "https://github.com/OpenCnid/black-tie-federation",
+  "studies": [
+    {
+      "id": "lexideck-2026-codex-public",
+      "title": "Lexideck 2026 Codex Public",
+      "subject_kind": "prompt-and-skill-corpus",
+      "authors": ["Matthew Murphy"],
+      "publisher": "Lexideck Technologies",
+      "canonical": "https://github.com/Lexideck-Technologies/Lexideck2026",
+      "pinned_commit": "a1bc8a6b608f2cf4b98716c22dc75ffab3205987",
+      "pinned_date": "2026-07-16",
+      "pinned_version": "0.1.0",
+      "source_license": "GPL-3.0-only",
+      "date_summarized": "2026-07-22",
+      "verified_against_source": "2026-07-22",
+      "tier_budget_words": 90,
+      "note_path": "docs/density-chain/DENSITY-CHAIN.md",
+      "render_path": "docs/density-chain/DENSITY-CHAIN.html",
+      "spark_path": "docs/SPARK-STEERING.md",
+      "upstream_readme_path": "UPSTREAM-README.md",
+      "upstream_files_edited": 0,
+      "upstream_files_renamed": ["README.md -> UPSTREAM-README.md"],
+      "branches": [
+        { "id": "B1", "name": "The six-agent federation", "tiers": 5 },
+        { "id": "B2", "name": "The nineteen-skill corpus", "tiers": 5 },
+        { "id": "B3", "name": "The publication boundary", "tiers": 5 },
+        { "id": "B4", "name": "The PTG persona-authoring pipeline", "tiers": 5 },
+        { "id": "B5", "name": "Descent from WonderSuite", "tiers": 0 }
+      ],
+      "companion_study": "https://github.com/OpenCnid/axes-of-wonder",
+      "tags": [
+        "codex-agents",
+        "multi-agent-systems",
+        "prompt-engineering",
+        "persona-design",
+        "skill-library",
+        "density-chain",
+        "spark-steering"
+      ]
+    }
+  ]
+}

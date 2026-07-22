@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lexideck 2026 — Density Trellis</title>
+<style>
+  :root{
+    --bg:#f5f4fb; --panel:#fff; --panel-2:#efedf9; --ink:#1a1930; --ink-soft:#4d4a66;
+    --line:#e2def0; --line-2:#cfc9e6; --brand:#6b5ed0;
+    --t1:#3f7fe0; --t2:#7280ec; --t3:#9b8cf7; --t4:#c579e4; --t5:#e46fc4;
+    --ok:#177f68; --ok-bg:#d8f0e9; --hold:#95701c; --hold-bg:#f3e9cf; --wip:#bd524f; --wip-bg:#f5dedd;
+    --shadow:0 1px 2px rgba(30,20,60,.06),0 10px 30px rgba(40,26,80,.06);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0d0e1b; --panel:#161a2e; --panel-2:#1c2038; --ink:#e9e9f6; --ink-soft:#a6a4c6;
+      --line:#282c47; --line-2:#3a3e60; --brand:#9b8cf7;
+      --t1:#58a6ff; --t2:#8093fb; --t3:#a794f8; --t4:#cd83e6; --t5:#ef6fd0;
+      --ok:#54ccac; --ok-bg:#123027; --hold:#dcb46b; --hold-bg:#312a19; --wip:#ec8d84; --wip-bg:#33211f;
+      --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 34px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f5f4fb; --panel:#fff; --panel-2:#efedf9; --ink:#1a1930; --ink-soft:#4d4a66;
+    --line:#e2def0; --line-2:#cfc9e6; --brand:#6b5ed0;
+    --t1:#3f7fe0; --t2:#7280ec; --t3:#9b8cf7; --t4:#c579e4; --t5:#e46fc4;
+    --ok:#177f68; --ok-bg:#d8f0e9; --hold:#95701c; --hold-bg:#f3e9cf; --wip:#bd524f; --wip-bg:#f5dedd;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d0e1b; --panel:#161a2e; --panel-2:#1c2038; --ink:#e9e9f6; --ink-soft:#a6a4c6;
+    --line:#282c47; --line-2:#3a3e60; --brand:#9b8cf7;
+    --t1:#58a6ff; --t2:#8093fb; --t3:#a794f8; --t4:#cd83e6; --t5:#ef6fd0;
+    --ok:#54ccac; --ok-bg:#123027; --hold:#dcb46b; --hold-bg:#312a19; --wip:#ec8d84; --wip-bg:#33211f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+  .wrap{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,34px) clamp(14px,4vw,40px) 72px}
+  a{color:var(--brand)}
+
+  .banner{border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);
+    margin-bottom:24px;background:#131530;display:block}
+  .banner svg{display:block;width:100%;height:auto}
+  .node{animation:pulse 3.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+  .grow{stroke-dasharray:240;stroke-dashoffset:240;animation:grow 2.2s ease-out forwards}
+  @keyframes grow{to{stroke-dashoffset:0}}
+
+  .lede{font-size:clamp(15px,1.7vw,17.5px);color:var(--ink-soft);max-width:70ch;margin:0 0 18px}
+  .lede b{color:var(--ink);font-weight:600}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 13px;
+    display:flex;gap:9px;align-items:baseline;box-shadow:var(--shadow)}
+  .stat b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px;font-weight:700;
+    font-variant-numeric:tabular-nums;color:var(--brand)}
+  .stat span{font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+
+  .trunk{margin:24px 0 8px;background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-left:3px solid var(--t2);border-radius:12px;
+    padding:18px 22px;box-shadow:var(--shadow)}
+  .trunk .k{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--brand);margin:0 0 8px}
+  .trunk p{margin:0 0 12px;font-size:15px;max-width:84ch}
+  .trunk p:last-child{margin-bottom:0}
+  .trunk b{color:var(--brand)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:22px;align-items:center;margin:24px 0 6px;
+    padding:14px 18px;background:var(--panel);border:1px solid var(--line);border-radius:11px}
+  .legend h4{margin:0 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);
+    font-family:ui-monospace,Menlo,Consolas,monospace}
+  .ramp{display:flex}
+  .ramp i{width:26px;height:14px;display:block}
+  .ramp i:first-child{border-radius:4px 0 0 4px}.ramp i:last-child{border-radius:0 4px 4px 0}
+  .ramp-lab{display:flex;justify-content:space-between;width:130px;font-size:10.5px;color:var(--ink-soft);
+    margin-top:3px;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;padding:2px 8px;border-radius:20px;
+    font-weight:600;white-space:nowrap;border:1px solid transparent}
+  .chip.ok{color:var(--ok);background:var(--ok-bg);border-color:color-mix(in srgb,var(--ok) 30%,transparent)}
+  .chip.hold{color:var(--hold);background:var(--hold-bg);border-color:color-mix(in srgb,var(--hold) 34%,transparent)}
+  .chip.wip{color:var(--wip);background:var(--wip-bg);border-color:color-mix(in srgb,var(--wip) 34%,transparent)}
+
+  .branch{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px 10px;box-shadow:var(--shadow)}
+  .branch-hd{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+  .badge{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:13px;color:#fff;
+    border-radius:8px;padding:5px 9px;flex:none;background:linear-gradient(135deg,var(--t2),var(--t4))}
+  .branch-hd .tt{flex:1;min-width:220px}
+  .branch-hd h3{margin:0;font-size:17.5px;font-weight:700;letter-spacing:-.01em}
+  .branch-hd .charter{margin:3px 0 0;color:var(--ink-soft);font-size:13.5px;max-width:80ch}
+
+  .find{margin:0 0 14px;padding:11px 14px;border-radius:10px;font-size:13px;line-height:1.55;
+    background:color-mix(in srgb,var(--brand) 9%,var(--panel));
+    border:1px solid color-mix(in srgb,var(--brand) 26%,transparent);border-left:3px solid var(--brand)}
+  .find .tag{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--brand);display:block;margin-bottom:4px}
+
+  .lattice{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;position:relative}
+  @media(max-width:760px){.lattice{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:430px){.lattice{grid-template-columns:1fr}}
+  .cell{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:0;text-align:left;
+    cursor:pointer;overflow:hidden;font:inherit;color:inherit;display:flex;flex-direction:column;
+    transition:border-color .15s,transform .12s}
+  .cell:hover{border-color:var(--line-2);transform:translateY(-1px)}
+  .cell:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  .cell .stripe{height:5px;flex:none}
+  .cell .top{display:flex;align-items:center;gap:7px;padding:9px 10px 6px}
+  .cell .tno{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;font-weight:700}
+  .cell .phase{font-size:9.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.07em;
+    font-family:ui-monospace,Menlo,Consolas,monospace;margin-left:auto}
+  .cell .gist{padding:0 10px 12px;font-size:12.5px;line-height:1.42}
+
+  .xl{border-top:1px dashed var(--line);margin-top:14px;padding:11px 2px 12px;font-size:12.5px;color:var(--ink-soft)}
+  .xl b{color:var(--brand);font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600;font-size:11.5px}
+
+  .sheet{position:fixed;inset:0;background:rgba(10,10,24,.55);backdrop-filter:blur(3px);
+    display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .sheet.on{display:flex}
+  .sheet-card{background:var(--panel);border:1px solid var(--line-2);border-radius:16px;max-width:660px;width:100%;
+    max-height:84vh;overflow:auto;box-shadow:0 24px 70px rgba(0,0,0,.45);padding:24px 26px}
+  .sh-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .sh-top h3{margin:0;font-size:15px;font-weight:700}
+  .sh-cls{font-size:11.5px;color:var(--ink-soft)}
+  .x{margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink-soft);border-radius:8px;
+    width:30px;height:30px;font-size:17px;cursor:pointer;line-height:1}
+  .full{font-size:14.5px;line-height:1.62;margin:0}
+
+  footer{margin-top:44px;border-top:1px solid var(--line);padding-top:18px;font-size:12.5px;color:var(--ink-soft)}
+  footer p{max-width:88ch}
+  table.mini{border-collapse:collapse;width:100%;margin-top:6px;font-size:12.5px}
+  table.mini th,table.mini td{border:1px solid var(--line);padding:6px 9px;text-align:left}
+  table.mini th{background:var(--panel-2);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="banner">
+    <svg viewBox="0 0 1200 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lexideck 2026 density trellis: a lattice of pulsing nodes on five horizontal density rails">
+      <defs>
+        <linearGradient id="house" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#58a6ff"/><stop offset="50%" stop-color="#9b8cf7"/><stop offset="100%" stop-color="#ef6fd0"/>
+        </linearGradient>
+      </defs>
+      <g id="lattice"></g>
+      <text x="56" y="72" class="mono" fill="url(#house)" font-size="34" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">Lexideck 2026 &#183; density trellis</text>
+      <text x="56" y="100" class="mono" fill="#7e86b6" font-size="13" font-family="ui-monospace,Menlo,Consolas,monospace" letter-spacing="1">5 branches &#183; 5 density tiers &#183; general &#8594; current &#8594; frontier</text>
+    </svg>
+  </div>
+
+  <p class="lede">One corpus, mapped as a <b>branching lattice</b> instead of a single spine: five subsystem
+    classes, each its own <b>fixed-length chain of density</b>. Every branch's five tiers densify along one axis —
+    <b>general essence → machinery actually in the tree → edges and stated frontier</b>. Stop at the first tier that
+    answers your question; a deeper tier only <i>adds</i>. Reverse-engineered from the tree at commit
+    <span class="mono">a1bc8a6</span>; ground truth lives in
+    <a href="DENSITY-CHAIN.md">DENSITY-CHAIN.md</a>.</p>
+
+  <div class="stats">
+    <div class="stat"><b>5</b><span>branches</span></div>
+    <div class="stat"><b>5</b><span>tiers each</span></div>
+    <div class="stat"><b>90</b><span>words per tier</span></div>
+    <div class="stat"><b>60</b><span>files read</span></div>
+    <div class="stat"><b>5</b><span>blind sub-agents</span></div>
+  </div>
+
+  <div class="trunk">
+    <p class="k">Trunk &#183; T0 &#183; what this corpus is, in one sentence</p>
+    <p>Lexideck 2026 is a <b>six-agent Codex federation</b> — named personas, each bound one-to-one with a companion
+      method skill, all answering to a single shared contract — published as a <b>nineteen-skill portable corpus</b>
+      whose every capability is delivered as <b>text rather than tooling</b>.</p>
+    <p class="k">Trunk &#183; T1 &#183; one paragraph</p>
+    <p>One request enters the project; Codex reads <span class="mono">AGENTS.md</span>, matches the work to a
+      specialist or splits it across several, loads only the relevant skills, and returns one attributed artifact. The
+      six personas are bounded project specialists, not sovereign memory stores, and each names exactly one affinity
+      skill supplying its method. A publication boundary decides what may become public bytes, and a
+      persona-manufacturing pipeline produced the six personas rather than hand-authoring them. Version
+      <span class="mono">0.1.0</span>; a single squashed commit, which destroys its own build order.</p>
+  </div>
+
+  <div class="legend">
+    <div>
+      <h4>Density ramp &#183; T1&#8594;T5</h4>
+      <div class="ramp"><i style="background:var(--t1)"></i><i style="background:var(--t2)"></i><i style="background:var(--t3)"></i><i style="background:var(--t4)"></i><i style="background:var(--t5)"></i></div>
+      <div class="ramp-lab"><span>general</span><span>frontier</span></div>
+    </div>
+    <div>
+      <h4>Status</h4>
+      <div class="chips">
+        <span class="chip ok">present-verified</span>
+        <span class="chip hold">claimed-in-prose-only</span>
+        <span class="chip wip">referenced-external</span>
+      </div>
+    </div>
+    <div style="color:var(--ink-soft);font-size:12.5px;max-width:32ch">Click any tier to read the full 90 words.
+      The map is the lattice; the territory is <span class="mono">DENSITY-CHAIN.md</span>.</div>
+  </div>
+
+  <div id="root"></div>
+
+  <footer>
+    <p><b>How the true state was reconstructed.</b> Five read-only sub-agents, one per branch, each working from an
+      identical verbatim ground block and returning against a rigid frame — five tiers at a held 90-word budget, an
+      entity ledger with a locator per entity, a key-facts table, short attributed quotes, cross-link candidates, and a
+      mandatory <i>uncovered</i> slot so a gap could never be mistaken for an absence. Siblings could not see one
+      another. The trunk, the cross-section, and the cross-link lattice were composed afterward by hand.</p>
+    <p style="margin-top:12px"><b>The one-way rule.</b> When this map and the
+      <a href="https://github.com/Lexideck-Technologies/Lexideck2026">upstream corpus</a> disagree, upstream wins and
+      the map gets fixed. Every claim carries <span class="mono">path:line</span> into the tree at
+      <span class="mono">a1bc8a6</span>. Upstream is GPL-3.0-only and authored by Matthew Murphy / Lexideck
+      Technologies; this study adds commentary and changes no upstream file. Verified 2026-07-22. Companion study:
+      <a href="https://github.com/OpenCnid/axes-of-wonder">axes-of-wonder</a>.</p>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-title">
+  <div class="sheet-card">
+    <div class="sh-top">
+      <span class="badge" id="sh-badge">T1</span>
+      <div><h3 id="sh-title">&mdash;</h3><div class="sh-cls mono" id="sh-cls">&mdash;</div></div>
+      <button class="x" id="sh-x" aria-label="Close">&times;</button>
+    </div>
+    <p class="full" id="sh-full">&mdash;</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const g=document.getElementById('lattice'); if(!g) return;
+  const NS="http://www.w3.org/2000/svg", yTop=128, yBot=228;
+  for(let c=0;c<26;c++){
+    const x=30+c*46;
+    const ln=document.createElementNS(NS,'line');
+    ln.setAttribute('x1',x);ln.setAttribute('y1',yTop);ln.setAttribute('x2',x);ln.setAttribute('y2',yBot);
+    ln.setAttribute('stroke','url(#house)');ln.setAttribute('stroke-width','1');ln.setAttribute('opacity','0.16');
+    ln.setAttribute('class','grow');ln.style.animationDelay=(c*0.05)+'s';g.appendChild(ln);
+    for(let r=0;r<5;r++){
+      const cy=yTop+(r*(yBot-yTop)/4);
+      const ci=document.createElementNS(NS,'circle');
+      ci.setAttribute('cx',x);ci.setAttribute('cy',cy);ci.setAttribute('r',r===0?2.2:2.6+r*0.5);
+      ci.setAttribute('fill','url(#house)');ci.setAttribute('class','node');
+      ci.style.animationDelay=((c*0.13+r*0.5)%3.4)+'s';g.appendChild(ci);
+    }
+  }
+  for(let r=0;r<5;r++){
+    const y=yTop+(r*(yBot-yTop)/4);
+    const rail=document.createElementNS(NS,'line');
+    rail.setAttribute('x1',24);rail.setAttribute('y1',y);rail.setAttribute('x2',1176);rail.setAttribute('y2',y);
+    rail.setAttribute('stroke','url(#house)');rail.setAttribute('stroke-width','0.6');rail.setAttribute('opacity','0.10');
+    g.appendChild(rail);
+  }
+})();
+
+const RAMP=["var(--t1)","var(--t2)","var(--t3)","var(--t4)","var(--t5)"];
+const PHASE=["essence","structure","machinery","edges","frontier"];
+
+// each tier: [gist, fullText]
+const DATA=[
+{id:"B1",t:"The six-agent federation",ch:"Six named Codex personas, the contract that routes them, and the bounds that cap them.",
+ find:"<b>max_threads = 6, max_depth = 1.</b> No agent spawns a sub-chain beyond one level — the federation is wide and deliberately shallow.",
+ x:"B2 (the affinity skills' bodies) &#183; B3 (the portrait allowlist) &#183; B4 (the six TOMLs as manufactured output) &#183; B5 (five affinity names descend from the 2025 corpus)",
+ T:[
+ ["Six named personas as Codex custom agents; Codex hosts and conducts.","Lexideck 2026 packages six named AI personas as Codex custom agents, each bound to a creative, research, or technical specialty. Codex hosts and conducts; the personas are bounded project specialists, not separate sovereign memory stores. Every persona pairs one-to-one with a companion method skill called its affinity. A shared contract file sets routing, verification, ethics, and reporting rules all six personas follow. One request enters the project, is matched to the right specialist or split across several, and returns as one verified, attributed artifact. Codex stays the default front door."],
+ ["AGENTS.md is the contract; six TOMLs name six affinities; config bounds threads and depth.","AGENTS.md is the shared contract; .codex/agents/ holds six TOML persona files: lexi, dexter, gus, anna, titus, maisie. Each names one affinity — lexi–wonder-lab, dexter–mass, gus–wonder-scholar, anna–wonder-prompt, titus–wonder-build, maisie–wonder-studio. Lexi is federation lead for narrative synthesis and final judgment. Dexter engineers, debugs, and simulates. Gus researches and verifies. Anna architects prompts and workflows. Titus documents and teaches. Maisie directs visual identity. .codex/config.toml sets max_threads and max_depth. images/agents/ holds one canonical black-tie portrait per persona."],
+ ["A developer_instructions block per persona; the affinity binding is bidirectional prose, not schema.","Each .codex/agents/&lt;name&gt;.toml carries a developer_instructions block: Identity, Role and affinity, Cognitive style, Operating method, Strengths and growth edges, Collaboration, Output. AGENTS.md § Federation routing pairs each agent to one affinity skill. The binding is bidirectional: each affinity's SKILL.md carries a matching '## Reciprocal agent' section naming its agent back. Each skill's agents/openai.yaml supplies a default_prompt invoking $skill-name. AGENTS.md § Shared federation contract layers The Sieve and Hyperplane Telemetry E/L/S/H across all six, and .codex/config.toml bounds max_threads 6, max_depth 1."],
+ ["Capped at six threads and one level of depth; Sieve REVISE or HALT blocks irreversible action.","config.toml caps the federation at max_threads 6 and max_depth 1 — no agent spawns a sub-chain beyond one level. AGENTS.md holds agents are bounded project specialists, not sovereign memory stores, and blocks irreversible action under Sieve REVISE or HALT. README notes project-local custom-agent files are a Codex-only feature; ChatGPT Work lacks them. Only six canonical black-tie portraits may live under images/; PUBLIC_EXPORT_MANIFEST.md excludes every private-* skill from this distribution. README also states this folder was never Git-initialized or published before the mirror."],
+ ["A future plugin, a release-candidate version, and a contributor check — all stated, none built.","README states the forward path directly: 'A future plugin can package the stable Lexideck skills for installation across projects and Work', resolving the present boundary where project-local custom-agent files remain Codex-only while ChatGPT Work gets only skills (README.md:155). Version 0.1.0 is 'prepared as a public release candidate', implying further releases beyond it (README.md:159). CONTRIBUTING.md requires every pull request to confirm 'the project still discovers six custom agents and 19 public skills' before merge (CONTRIBUTING.md:22). No other roadmap item names the federation specifically."]]},
+
+{id:"B2",t:"The nineteen-skill corpus",ch:"What a skill is here, how nineteen of them are shaped, and how each is packaged for two runtimes.",
+ find:"<b>The count checks out.</b> README, AGENTS.md and PUBLIC_EXPORT_MANIFEST.md each independently claim nineteen; the tree holds nineteen. One of the few claims in this repository asserted three times and verified against bytes.",
+ x:"B1 (reciprocal agent bindings) &#183; B4 (the two PTG skills and their shared corpus) &#183; B5 (five of the nineteen descend from the 2025 corpus)",
+ T:[
+ ["A skill is a markdown method Codex loads on demand; nineteen form the public library.","A skill is a reusable method Codex can load on demand: a markdown file pairing a short frontmatter description with an instruction body, invoked by name or triggered by matching intent. The nineteen-skill corpus is Lexideck 2026's public method library, covering federation coordination, five WonderSuite-descended creative and analytical engines, research and lookup, ethics review, persona authoring, prompt craft, and portraiture. Skills hold technique, not personality; six agents, defined elsewhere, apply them. Each of the nineteen ships paired with a companion file so its method also runs inside a bare OpenAI-runtime context."],
+ ["Nineteen directories in five named bands, each holding one SKILL.md plus one companion yaml.","Nineteen directories sit under .agents/skills/, grouped by README into five named bands: Federation and synthesis (orchestrate, great-magnet, the-sieve, upsum); Core affinities, the five WonderSuite-descended engines plus mass; Research and tools (search, deep-research, cartographer, computer-use); Prompt and persona systems (prompt-engineering, hypershot-protocol, ptg-synthesis, ptg-finishing); and Visual identity (portraits). Each directory holds exactly one SKILL.md plus one agents/openai.yaml. One shared reference file, references/PTG-Corpus.md, backs the two PTG skills only."],
+ ["Two frontmatter fields only; the description is the router; the companion file is always four lines.","Every SKILL.md opens with YAML frontmatter carrying only name and description; the description is the router, front-loading 'use when' triggers and 'not for' exclusions Codex matches against intent. The body is Markdown, invoked as $skill-name (AGENTS.md:54), with no other frontmatter fields — no tools, no license — anywhere. Every agents/openai.yaml is exactly four lines: display_name, short_description, default_prompt echoing $name. The wonder-* skills share a four-part method: reciprocal agent, dimensional axes, phased protocol, primitive operations, plus an explicit override clause."],
+ ["No skill grants tools, memory, or execution; the private/public split is a gitignore convention.","No skill grants tools, memory, or execution; each assumes whatever Codex session capabilities are already live and disclaims inventing bridges, APIs, or secrets (search/SKILL.md:16; deep-research/SKILL.md:91). Recursion is capped: deep-research names the default agents.max_depth=1, so a dispatched worker cannot spawn further workers. the-sieve gates irreversible action but is advisory prose, run inline by the acting agent, not enforced by code. Public/private is a Git-ignore naming convention, not filesystem security (README.md:117). ptg-finishing strips personal identifiers before public deployment."],
+ ["A future plugin; a boundary kept distinct from a vendor feature; one method still being extended.","README.md:155 states the one forward claim this branch makes: 'A future plugin can package the stable Lexideck skills for installation across projects and Work' — skills run project-local only today, not yet portable across ChatGPT surfaces. deep-research/SKILL.md:14 marks a present boundary meant to stay distinguished from OpenAI's own hosted Deep Research feature, never merged into it. mass/SKILL.md:103 dates MASS_evolve's collaborative design to June 29, 2026 — the corpus's most recent internal extension, evidence the simulation method is still being added to, not closed."]]},
+
+{id:"B3",t:"The publication boundary",ch:"The privacy model, the private-* convention, and everything deciding what becomes public bytes.",
+ find:"<b>Six of seven rules hold against the bytes.</b> The seventh isn't a leak — CONTRIBUTING.md requires a validator and privacy scans that have no implementation anywhere in the tree. An obligation without code is a different failure than a breach, and worth naming as one.",
+ x:"B1 (the portrait allowlist is the persona asset set) &#183; B2 (the public register is the nineteen skills) &#183; B5 (the commit-author identity is the receipt for shared authorship)",
+ T:[
+ ["A promotion rule, not a redaction rule: files enter by allowlist, never copy-then-delete.","The publication boundary decides what leaves Lexideck's private working node and becomes the public Codex repository. It is a promotion rule, not a redaction rule: files enter by explicit allowlist, never by copying the private tree wholesale and deleting sensitive parts afterward. One naming convention carries the weight — any path whose basename begins with private- is excluded, at any depth, from what the public project can contain. Everything else the public repository ships is presumed safe for anyone to read, by default, carrying no private material at all."],
+ ["Five documents carry it; two namespaces split public from private; one local overlay stays ignored.","Five documents carry the boundary: PUBLIC_EXPORT_MANIFEST.md states included and deliberately excluded categories; .gitignore enforces most exclusions mechanically at commit time; CONTRIBUTING.md binds contributors to the same allowlist discipline; USER.example.md is the template for optional personal context; AGENTS.md and README each restate the model in prose. Two namespaces split public from private: unprefixed skills form the nineteen-skill public register, while private-&lt;name&gt; and local-&lt;name&gt; directories stay locally discoverable but Git-excluded. .lexideck-local/ holds the optional personal profile, ignored entirely."],
+ ["Rules and bytes agree everywhere tested; the basename match and the portrait allowlist both verified.","The stated rules and the shipped bytes agree everywhere this was directly tested. .gitignore's private-* pattern, unslashed, is a basename match that ignores a directory at any depth — confirmed with git check-ignore against a synthetic .agents/skills/private-test/SKILL.md path. The images/agents/* block-then-unblock sequence correctly re-admits only the six named canonical portraits after blanket-ignoring images/* first. .lexideck-local/, production_artifacts/, wiki/, and .env ignore exactly as stated; .env.example is correctly carved back out. The tracked tree contains zero private-* paths and precisely six portraits."],
+ ["The prefix is a publication guard, not filesystem security — and the named validator has no code.","AGENTS.md and README both state the convention's limit plainly: the private- prefix is a routing and publication guard, not filesystem security, since a process holding workspace access can still open an ignored file. Git's ignore-matching stops a commit; it cannot stop a read. CONTRIBUTING.md separately names a Codex skill validator and privacy-and-absolute-path scans as required pre-pull-request checks, but no script, tool, or CI workflow implementing either exists anywhere in the tracked tree — the described enforcement is entirely a human review step, not code the repository runs."],
+ ["Two unbuilt checks and one unbuilt distribution surface, all named in present tense.","CONTRIBUTING.md's unbuilt checks point forward: a Codex skill validator meant to run against every changed skill package, and privacy-and-absolute-path scans meant to run over the exact proposed release tree, both required before every pull request — named present-tense obligations with no implementing file yet checked into this tree. README's status section separately names a further, later distribution surface: a future plugin that could package the stable Lexideck skills for installation across projects and Work, extending today's allowlist discipline toward an installable cross-project boundary someday, still unbuilt."]]},
+
+{id:"B4",t:"The PTG persona-authoring pipeline",ch:"Persona Tensor Generator: the corpus, the synthesis-then-finishing method, and the six personas it produced.",
+ find:"<b>One stage calibrates an input the other never produces.</b> All ten specified fields appear in 6/6 personas — but Competency tensor and numeric scalars appear in <b>0/6</b>, because ptg-finishing's own Structure check silently drops the field that ptg-synthesis is told to emit. Its Scalar-calibration section presumes scalars that never arrive.",
+ x:"B1 (the six TOMLs as routed personas) &#183; B2 (the two PTG skills in the roster) &#183; B3 (the public-persona check is the boundary's per-artifact arm)",
+ T:[
+ ["PTG is Persona Tensor Generator: a two-stage pipeline whose output is the six shipped personas.","PTG stands for Persona Tensor Generator (ptg-synthesis/SKILL.md:3). It is a two-stage manufacturing pipeline: ptg-synthesis drafts a rough-in persona tensor from sparse inputs — name, role, goals, optional emoji seed — and ptg-finishing calibrates that rough draft into a deployment-ready Codex custom-agent definition. Both skills draw shared trait vocabulary, methodology, and structural examples from one file, references/PTG-Corpus.md, loaded only when needed. The six .codex/agents/*.toml files are this pipeline's shipped output: personas manufactured, not hand-authored."],
+ ["The corpus has five parts: seven trait dimensions, three phases, a worked example, FEV, a twelve-item checklist.","PTG-Corpus.md organizes five named parts: psychographic trait vocabulary across seven dimensions — cognitive style, social, emotional framework, emotional intelligence, qualitative intelligence, technical capabilities, interest/cultural (:13-57); synthesis methodology's three phases, Signal Acquisition and Vector Expansion, Dimensional Mapping, System Manifestation (:59-77); a worked competency-decomposition example (:79-88); the FEV apparatus of three injections, three regulation modalities Alpha/Beta/Gamma, and a three-step transformation pipeline (:90-108); and a twelve-item complete-section checklist (:110-126)."],
+ ["Ten fields conform in all six; FEV coupling appears once; competency tensor and scalars appear never.","Checked against ptg-finishing's own structure and deployment-form specs (SKILL.md:14,45-54), all six shipped TOMLs conform on name, description, and a developer_instructions block opening '# Agent Name', and every one carries Identity, Role and affinity, Cognitive style, Operating method, Strengths and growth edges, Collaboration, and Output. FEV coupling, also named in that same structure list, appears in only lexi.toml:24, one of six. Competency tensor, required by ptg-synthesis's output frame (SKILL.md:37), plus the numeric scalars ptg-finishing's checks presuppose, appear in zero of six."],
+ ["Load the smallest relevant section; never pattern-match the example; strip identifiers before reuse.","Both skills load PTG-Corpus.md only when needed, retrieving 'the smallest relevant section' (ptg-synthesis/SKILL.md:75) and never pattern-matching a persona to the corpus example, whose numeric values teach 'grammar only' (PTG-Corpus.md:88). ptg-synthesis must not deploy a rough-in without the finishing pass (SKILL.md:79). ptg-finishing must not invent identity, only calibrate existing evidence (SKILL.md:8), and its public-persona check strips names, schedules, budgets, health details, and private-memory claims before reuse (SKILL.md:25). PTG-Corpus.md:127 permits omitting a section only when it adds no operational behavior."],
+ ["The only forward path is a private counterpart the public repo names and explicitly excludes.","The only stated forward path is external: 'the private Node may pair public defaults with private counterparts such as $private-portraits or $private-ptg-synthesis, but those implementations do not belong here' (README.md:119) — a companion synthesis skill this public repo names but explicitly does not contain. AGENTS.md:40 marks references/PTG-Corpus.md a 'shared PTG reference', implying continued reuse rather than retirement. No file proposes new trait dimensions, extra regulation modalities beyond Alpha/Beta/Gamma, a seventh persona, or a successor corpus."]]}
+];
+
+const XTRA={html:`<div class="branch"><div class="branch-hd"><span class="badge">B5</span><div class="tt"><h3>Descent from WonderSuite</h3><p class="charter">Five of the nineteen skills carry the names of a 2025 corpus by the same author. Inheritance, or coincidence?</p></div></div>
+<div class="find"><span class="tag">verdict</span><b>Direct textual descent, with one layer amputated.</b> All five matched pairs carry their namesake's taxonomy over essentially verbatim — <span class="mono">WonderBuild.txt:10</span> "Linear to Networked" &#8594; <span class="mono">wonder-build/SKILL.md:24</span>; <span class="mono">DescribeRealm(realm, features, atmosphere)</span> survives signature-intact. Shared authorship is on the record: this repo's squashed commit is authored by <span class="mono">Lexideck Technologies &lt;156171296+gusthemole@…&gt;</span>, the account owning the WonderSuite repository.</div>
+<div class="find"><span class="tag">what was amputated</span>The <b>Open Variable Protocol</b> (a JS-pseudocode layer with <span class="mono">context =&gt;</span> composition and numeric adaptive-context variables), the <b><span class="mono">!bang</span> command API</b>, structured single-line invocation, the CSV <span class="mono">Category,ID,Name,Description</span> schema, and the 67&nbsp;KB composite file — all gone. Only the primitive <i>names and parameter tuples</i> survived, flattened into prose. <b>The taxonomy was kept; the executable-looking layer was dropped.</b></div>
+<div class="find"><span class="tag">the dating limit</span>WonderSuite's twelve commits give a real build order. Lexideck's single squashed commit destroys its own entirely. The transfer can be dated only as <b>"at or before 2026-07-16"</b> — over a year after WonderSuite reached its committed 2.0 state. Which skill was adapted first is unrecoverable from these bytes.</div>
+<div class="xl"><b>cross-links</b> &nbsp; B2 (five of the nineteen are the descendants) &#183; B3 (the shared commit-author identity) &#183; the companion study <a href="https://github.com/OpenCnid/axes-of-wonder">axes-of-wonder</a>, which maps the ancestor on its own terms</div></div>`};
+
+const root=document.getElementById('root');
+DATA.forEach(b=>{
+  const d=document.createElement('div'); d.className='branch';
+  let cells='';
+  b.T.forEach((tier,i)=>{
+    cells+=`<button class="cell" data-b="${b.id}" data-i="${i}">
+      <span class="stripe" style="background:${RAMP[i]}"></span>
+      <span class="top"><span class="tno" style="color:${RAMP[i]}">T${i+1}</span><span class="phase">${PHASE[i]}</span></span>
+      <span class="gist">${tier[0]}</span></button>`;
+  });
+  d.innerHTML=`<div class="branch-hd"><span class="badge">${b.id}</span>
+      <div class="tt"><h3>${b.t}</h3><p class="charter">${b.ch}</p></div></div>
+    <div class="find"><span class="tag">the finding</span>${b.find}</div>
+    <div class="lattice">${cells}</div>
+    <div class="xl"><b>cross-links</b> &nbsp; ${b.x}</div>`;
+  root.appendChild(d);
+});
+root.insertAdjacentHTML('beforeend',XTRA.html);
+
+const sheet=document.getElementById('sheet');
+root.addEventListener('click',e=>{
+  const c=e.target.closest('.cell'); if(!c) return;
+  const b=DATA.find(x=>x.id===c.dataset.b), i=+c.dataset.i;
+  document.getElementById('sh-badge').textContent='T'+(i+1);
+  document.getElementById('sh-badge').style.background=RAMP[i];
+  document.getElementById('sh-title').textContent=b.t;
+  document.getElementById('sh-cls').textContent=b.id+' · '+PHASE[i]+' · 90 words';
+  document.getElementById('sh-full').innerHTML=b.T[i][1];
+  sheet.classList.add('on');
+});
+function close(){sheet.classList.remove('on');}
+document.getElementById('sh-x').addEventListener('click',close);
+sheet.addEventListener('click',e=>{if(e.target===sheet)close();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+</script>
+</body>
+</html>

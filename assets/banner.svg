@@ -1,0 +1,78 @@
+<svg viewBox="0 0 880 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="black-tie-federation: six bow-tie figures in a row, each wired to a shared contract bar below, with nineteen skill dots fanned beneath">
+  <defs>
+    <linearGradient id="ramp" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#58a6ff"/>
+      <stop offset="50%" stop-color="#9b8cf7"/>
+      <stop offset="100%" stop-color="#ef6fd0"/>
+    </linearGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#58a6ff" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#9b8cf7" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ef6fd0" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <text x="440" y="46" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="33" font-weight="700" fill="url(#ramp)">black-tie-federation</text>
+  <text x="440" y="76" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="12" fill="#8b949e">six agents &#183; nineteen skills &#183; one contract they all answer to</text>
+
+  <!-- six personas: head + bow tie -->
+  <g>
+    <g transform="translate(115,110)">
+      <circle cx="0" cy="0" r="13" fill="none" stroke="#58a6ff" stroke-width="1.6" opacity="0.9"/>
+      <path d="M-11,22 L0,15 L11,22 L0,29 Z" fill="#58a6ff" opacity="0.85"/>
+      <animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.0s" fill="freeze"/>
+    </g>
+    <g transform="translate(245,110)">
+      <circle cx="0" cy="0" r="13" fill="none" stroke="#7691fb" stroke-width="1.6" opacity="0.9"/>
+      <path d="M-11,22 L0,15 L11,22 L0,29 Z" fill="#7691fb" opacity="0.85"/>
+      <animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.12s" fill="freeze"/>
+    </g>
+    <g transform="translate(375,110)">
+      <circle cx="0" cy="0" r="13" fill="none" stroke="#9b8cf7" stroke-width="1.6" opacity="0.9"/>
+      <path d="M-11,22 L0,15 L11,22 L0,29 Z" fill="#9b8cf7" opacity="0.85"/>
+      <animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.24s" fill="freeze"/>
+    </g>
+    <g transform="translate(505,110)">
+      <circle cx="0" cy="0" r="13" fill="none" stroke="#b881f0" stroke-width="1.6" opacity="0.9"/>
+      <path d="M-11,22 L0,15 L11,22 L0,29 Z" fill="#b881f0" opacity="0.85"/>
+      <animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.36s" fill="freeze"/>
+    </g>
+    <g transform="translate(635,110)">
+      <circle cx="0" cy="0" r="13" fill="none" stroke="#d675e3" stroke-width="1.6" opacity="0.9"/>
+      <path d="M-11,22 L0,15 L11,22 L0,29 Z" fill="#d675e3" opacity="0.85"/>
+      <animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.48s" fill="freeze"/>
+    </g>
+    <g transform="translate(765,110)">
+      <circle cx="0" cy="0" r="13" fill="none" stroke="#ef6fd0" stroke-width="1.6" opacity="0.9"/>
+      <path d="M-11,22 L0,15 L11,22 L0,29 Z" fill="#ef6fd0" opacity="0.85"/>
+      <animate attributeName="opacity" values="0;1" dur="0.5s" begin="0.60s" fill="freeze"/>
+    </g>
+  </g>
+
+  <!-- risers down to the shared contract bar -->
+  <g stroke="url(#ramp)" stroke-width="1" opacity="0.34">
+    <line x1="115" y1="139" x2="115" y2="166"/>
+    <line x1="245" y1="139" x2="245" y2="166"/>
+    <line x1="375" y1="139" x2="375" y2="166"/>
+    <line x1="505" y1="139" x2="505" y2="166"/>
+    <line x1="635" y1="139" x2="635" y2="166"/>
+    <line x1="765" y1="139" x2="765" y2="166"/>
+  </g>
+
+  <!-- the shared contract: AGENTS.md -->
+  <rect x="100" y="166" width="680" height="2" fill="url(#ramp)" opacity="0.55"/>
+  <text x="440" y="184" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="10.5" fill="#8b949e" letter-spacing="1.4">AGENTS.md &#8212; the shared federation contract</text>
+
+  <!-- nineteen skills, fanned -->
+  <g fill="url(#ramp)" opacity="0.75">
+    <circle cx="152" cy="212" r="3.4"/><circle cx="187" cy="212" r="3.4"/><circle cx="222" cy="212" r="3.4"/>
+    <circle cx="257" cy="212" r="3.4"/><circle cx="292" cy="212" r="3.4"/><circle cx="327" cy="212" r="3.4"/>
+    <circle cx="362" cy="212" r="3.4"/><circle cx="397" cy="212" r="3.4"/><circle cx="432" cy="212" r="3.4"/>
+    <circle cx="467" cy="212" r="3.4"/><circle cx="502" cy="212" r="3.4"/><circle cx="537" cy="212" r="3.4"/>
+    <circle cx="572" cy="212" r="3.4"/><circle cx="607" cy="212" r="3.4"/><circle cx="642" cy="212" r="3.4"/>
+    <circle cx="677" cy="212" r="3.4"/><circle cx="712" cy="212" r="3.4"/><circle cx="747" cy="212" r="3.4"/>
+    <circle cx="782" cy="212" r="3.4"/>
+    <animate attributeName="opacity" values="0;0;0.75" keyTimes="0;0.55;1" dur="1.8s" begin="0s" fill="freeze"/>
+  </g>
+  <text x="440" y="238" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="10" fill="#6e7691" letter-spacing="1.2">19 portable skills &#183; counted against the tree, not the README</text>
+</svg>
